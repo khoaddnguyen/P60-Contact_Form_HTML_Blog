@@ -38,8 +38,9 @@ def contact():
         print(data["email"])
         print(data["phone"])
         print(data["message"])
-        return "<h1>Successfully sent your message</h1>"
-    return render_template("contact.html")
+        # return "<h1>Successfully sent your message</h1>"
+        return render_template("contact.html", message_sent=True)
+    return render_template("contact.html", message_sent=False)
 
 @app.route("/post/<int:index>")
 def show_post(index):
