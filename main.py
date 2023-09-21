@@ -1,5 +1,10 @@
 from flask import Flask, render_template, request
 import requests
+import smtplib
+from email.mime.text import MIMEText
+
+OWN_EMAIL = "OWN_EMAIL"
+OWN_PASSWORD = "OWN_EMAIL"  # security application password, not account password
 
 BLOG_API_URL = "https://api.npoint.io/eb6cd8a5d783f501ee7d"
 posts = requests.get(BLOG_API_URL).json()
@@ -41,6 +46,15 @@ def contact():
         # return "<h1>Successfully sent your message</h1>"
         return render_template("contact.html", message_sent=True)
     return render_template("contact.html", message_sent=False)
+
+def send_email(name, email, phone, message):
+    email_message = f"Subject:New Message\n\nName: {name}\nEmail: {email}\nPhone: {phone}\nMessage:{message}"
+    body = MIMEText(email_message)
+    with smtplib.SMTP_SSL("smtp.gmail.com", 456) as connection:
+        connection.starttls()
+        connection.login(OWN_EMAIL, OWN_PASSWORD)
+        connection.sendmail(OWN_EMAIL, OWN_EMAIL, body)
+    print('message sent!')
 
 @app.route("/post/<int:index>")
 def show_post(index):
